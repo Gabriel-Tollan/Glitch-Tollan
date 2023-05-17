@@ -1,13 +1,19 @@
 import { Router } from 'express';
 import { uploader } from '../utils.js';
-
+// import ProductManager from '../dao/Managers/productmanagerDb.js';
 const router = Router();
 
-const products = [];
+const productManager = new ProductManager();
 
-router.get('/', (req,res)=>{
-    
-    res.send({products})
+router.get('/', async (req,res)=>{
+    const limit = parseInt(req.query.limit);
+
+    const respuesta = await productManager.getProducts(limit);
+
+    res.status(respuesta.code).send({
+        status: respuesta.status,
+        message: respuesta.message
+    })
 
 })
 
