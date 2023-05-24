@@ -4,16 +4,44 @@ import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+import MongoStorage from 'connect-mongo';
+import passport from 'passport';
 
 import cartsRouter from './routes/carts.router.js';
 import productsRouter from './routes/products.router.js';
 import __dirname from './utils.js';
 import chatRouter from './routes/chat.router.js';
+import sessionRouter from './routes/session.router.js';
+import viewRouter from './routes/views.router.js';
+import initializePassport from './config/passport.config.js';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
-const MONGO = 'mongodb+srv://gabrieltollan:<Gabriel1987>@cluster0.m6bxmyo.mongodb.net/?retryWrites=true&w=majority'
+const MONGO = 'mongodb+srv://gabrieltollan:<Gabriel1987>@cluster0.m6bxmyo.mongodb.net/?retryWrites=true&w=majority'+ DB
+const DB = 'eshop';//nombre de mi base de datos en mongo
+
+
 //const messageManager = new MessageManager();
+app.use(session({
+    store: new MongoStorage({
+        mongoUrl: MONGO,
+        ttl:4000
+    }),
+    secret: "coderSecret",
+    resave:false,
+    saveUninitialized:false,
+}))
+initializePassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.get('/', (req,res)=>{
+    req.session.user = 'Active Session';
+    res.send('Session Set');
+});
+app.get('/test', (req,res)=>{
+    res.send(req.session.user);
+})
 
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
@@ -82,6 +110,8 @@ app.get('/', (req,res)=>{
     res.render('index',{user: users[randon]});
 })
 
+app.use('/', viewRouter);
+app.use('/api/session', sessionRouter)
 app.use('/api/cart', cartsRouter);
 app.use('/api/products', productsRouter);
 app.use('/', chatRouter);
