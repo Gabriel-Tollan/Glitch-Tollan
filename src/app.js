@@ -4,7 +4,7 @@ import { Server } from 'socket.io';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
-import MongoStorage from 'connect-mongo';
+import MongoStore from 'connect-mongo';
 import passport from 'passport';
 
 import cartsRouter from './routes/carts.router.js';
@@ -18,12 +18,13 @@ import initializePassport from './config/passport.config.js';
 const PORT = process.env.PORT || 8080;
 const app = express();
 const MONGO = 'mongodb+srv://gabrieltollan:<Gabriel1987>@cluster0.m6bxmyo.mongodb.net/?retryWrites=true&w=majority'+ DB
-const DB = 'eshop';//nombre de mi base de datos en mongo
+const DB = 'ecommerce';//nombre de mi base de datos en mongo
 
+mongoose.connect(MONGO);
 
 //const messageManager = new MessageManager();
 app.use(session({
-    store: new MongoStorage({
+    store: new MongoStore({
         mongoUrl: MONGO,
         ttl:4000
     }),
@@ -77,7 +78,7 @@ const server = app.listen(PORT, ()=>{
 })
 
 mongoose.connection.close();
-mongoose.connect(MONGO);
+
 
 const io = new Server(server);
 const messages = [];
@@ -110,8 +111,12 @@ app.get('/', (req,res)=>{
     res.render('index',{user: users[randon]});
 })
 
+app.get('/current', passport.authenticate('jwt', {session:false}), (req,res)=>{
+    res.send(req.user);
+})
+
 app.use('/', viewRouter);
-app.use('/api/session', sessionRouter)
+app.use('/api/sessions', sessionRouter)
 app.use('/api/cart', cartsRouter);
 app.use('/api/products', productsRouter);
-app.use('/', chatRouter);
+app.use('/api/chat', chatRouter);

@@ -1,18 +1,47 @@
-import passport from 'passport';
+import passport, { passport } from 'passport';
 import local from 'passport-local';
 import userService from '../models/User.model.js';
 import { createHash, validatePassword } from '../utils.js';
+import GitHubStrategy from 'passport-github2';
+import jwt from 'passport-jwt';
+
 
 const LocalStrategy = local.Strategy;
+const JWTStrategy = jwt.Strategy
+const ExtractJWT = jwt.ExtractJwt
 
+
+const initializePassport = () => {
+    passport.use('jwt', new JWTStrategy({
+        jwtFromRequest:ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey:'coderSecret'
+
+    }, 
+    async (jwt_payload,done)=>{
+        try {
+            return done(null,jwt_payload);
+        } catch (error) {
+            return done(error);
+        }
+    }))
+}
+
+const cookieExtractor = req =>{
+    let token = null;
+    if(req && req.cookies){
+        token = req.cookies['coderCokie']
+        console.log('Token CookieExtractor: ' + token)
+    }
+    return token
+}
 const initializePassport = () => {
 
     passport.use('register', new LocalStrategy(
         {passReqToCallback:true, usernameField:'email'}, 
         async (req,username, password,done) =>{
-            const { first_name, last_name, email,age } = req.body;
+            const { first_name, last_name, email, age } = req.body;
             try {
-                const user = await userService.findOne({email:username}); 
+                let user = await userService.findOne({email:username}); 
                 if(user){
                     console.log('El usuario existe');
                     return done(null,false);
@@ -25,11 +54,11 @@ const initializePassport = () => {
                     password: createHash(password)
                 }
 
-                const result = await userService.create(newUser);
+                let result = await userService.create(newUser);
                 return done(null, result);
 
             } catch (error) {
-                return done("Error al registrar el usuario: " + error);
+                return done("Error al registrar el usuario: " + error)
             }
         }
     ));
@@ -37,31 +66,40 @@ const initializePassport = () => {
         done(null, user._id)
     });
     passport.deserializeUser( async (id, done)=>{
-        const user = await userService.findById(id);
+        let user = await userService.findById(id);
         done(null, user)
     });
-    passport.use('login', new LocalStrategy({usernameField:'email'}, async (username, password, done)=>{
+    passport.use('github', new GitHubStrategy({
+        clientID:'Iv1.2769a36f8fb80ca1',
+        clientSecret:'fdfa3154389009f7522258ea82e946cf5029f72a',
+        callbackURL: 'http://localhost:8080/api/sessions/githubcallback'
 
+    }, async (accesToken, refreshToken,profile,done)=>{
         try {
-           
-           const user = await userService.findOne({email:username})
-           
+            
+            console.log(profile);
+            let user = await userService.findOne({email: profile._json.email})
             if(!user){
-                console.log('No existe el usuario');
-                return done(null, false);
+
+                const email = profile._json.email == null ?  profile._json.username : null;
+
+                const newUser = {
+                        first_name: profile._json.name,
+                        last_name:'',
+                        email: email,
+                        age: 18,
+                        password: '',
+                }
+                const result = await userService.create(newUser);
+                done(null,result)
+            }else{
+                
+                done(null, user)
             }
-            if(!validatePassword(password,user)) return done (null, false);
-            return done(null,user);
 
         } catch (error) {
-            
-            return done("Error al intentar ingresar: " + error);
-            
+            return done(null,error)
         }
-
     }))
-
-
 }
-
 export default initializePassport;
