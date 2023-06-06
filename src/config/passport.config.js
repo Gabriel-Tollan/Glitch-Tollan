@@ -1,39 +1,12 @@
-import passport, { passport } from 'passport';
+import passport from 'passport';
 import local from 'passport-local';
 import userService from '../models/User.model.js';
 import { createHash, validatePassword } from '../utils.js';
 import GitHubStrategy from 'passport-github2';
-import jwt from 'passport-jwt';
 
 
 const LocalStrategy = local.Strategy;
-const JWTStrategy = jwt.Strategy
-const ExtractJWT = jwt.ExtractJwt
 
-
-const initializePassport = () => {
-    passport.use('jwt', new JWTStrategy({
-        jwtFromRequest:ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey:'coderSecret'
-
-    }, 
-    async (jwt_payload,done)=>{
-        try {
-            return done(null,jwt_payload);
-        } catch (error) {
-            return done(error);
-        }
-    }))
-}
-
-const cookieExtractor = req =>{
-    let token = null;
-    if(req && req.cookies){
-        token = req.cookies['coderCokie']
-        console.log('Token CookieExtractor: ' + token)
-    }
-    return token
-}
 const initializePassport = () => {
 
     passport.use('register', new LocalStrategy(
@@ -72,7 +45,8 @@ const initializePassport = () => {
     passport.use('github', new GitHubStrategy({
         clientID:'Iv1.2769a36f8fb80ca1',
         clientSecret:'fdfa3154389009f7522258ea82e946cf5029f72a',
-        callbackURL: 'http://localhost:8080/api/sessions/githubcallback'
+        callbackURL: 'http://localhost:8080/api/sessions/githubcallback',
+        scope: ["user:email"]
 
     }, async (accesToken, refreshToken,profile,done)=>{
         try {

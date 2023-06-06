@@ -1,5 +1,4 @@
 import { Router }  from "express";
-import router from "./carts.router";
 
 const router = Router();
 

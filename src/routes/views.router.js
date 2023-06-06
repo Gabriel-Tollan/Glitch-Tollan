@@ -53,7 +53,7 @@ const cartManager = new CartManager();
    
 });
 
-router.get('/products', privateAccess, async (req, res)=>{
+router.get('/products', privateAcces, async (req, res)=>{
 
    const {limit = 10, page = 1, category, available, sort} = req.query;
    

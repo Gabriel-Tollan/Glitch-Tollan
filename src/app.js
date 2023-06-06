@@ -14,13 +14,16 @@ import chatRouter from './routes/chat.router.js';
 import sessionRouter from './routes/session.router.js';
 import viewRouter from './routes/views.router.js';
 import initializePassport from './config/passport.config.js';
+import UserRouter from './routes/users.router.js';
 
 const PORT = process.env.PORT || 8080;
 const app = express();
-const MONGO = 'mongodb+srv://gabrieltollan:<Gabriel1987>@cluster0.m6bxmyo.mongodb.net/?retryWrites=true&w=majority'+ DB
 const DB = 'ecommerce';//nombre de mi base de datos en mongo
+const MONGO = 'mongodb+srv://gabrieltollan:<Gabriel1987>@cluster0.m6bxmyo.mongodb.net/?retryWrites=true&w=majority'+ DB
 
 mongoose.connect(MONGO);
+
+const userRouter = new UserRouter
 
 //const messageManager = new MessageManager();
 app.use(session({
