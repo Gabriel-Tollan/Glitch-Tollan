@@ -1,37 +1,17 @@
 import { Router } from 'express';
-import { uploader } from '../utils.js';
-import ProductManager from '../../dao/Managers/productManagerMongo.js';
+
 const router = Router();
 
-const productManager = new ProductManager();
+import { getProducts, getProductByID, addProduct, updateProduct, deleteProduct } from '../controllers/products.controller.js';
 
-router.get('/', async (req,res)=>{
-    const limit = parseInt(req.query.limit);
+router.get('/', getProducts);
 
-    const respuesta = await productManager.getProducts(limit);
+router.get('/:pid', getProductByID);
 
-    res.status(respuesta.code).send({
-        status: respuesta.status,
-        message: respuesta.message
-    })
+router.post('/', addProduct);
 
-})
+router.put('/:pid', updateProduct);
 
-router.post('/',uploader.single('thumbnail'), (req,res)=>{
-    const product = req.body;
-
-    const filename = req.file.filename;
-
-    product.thumbnail = `http://localhost:8080/images/${filename}`;
-
-    products.push(product);
-
-    res.send({
-        status: 'Success',
-        product
-    })
-})
-
-
+router.delete('/:pid', deleteProduct);
 
 export default router;

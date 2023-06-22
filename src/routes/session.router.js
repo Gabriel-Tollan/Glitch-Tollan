@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import userModel from '../models/User.model.js';
+import userModel from '../dao/models/User.model.js';
 import { createHash, validatePassword } from '../utils.js';
 import passport from 'passport';
 
@@ -24,8 +24,10 @@ router.post('/login', passport.authenticate('login',{failureRedirect:'/faillogin
         first_name : req.user.first_name,
         last_name: req.user.last_name,
         age: req.user.age,
-        email: req.user.email
-    }
+        email: req.user.email,
+        role: req.user.role,
+        cart: req.user.cart
+    };
 
 
     res.send({status:"success", payload:req.user, message:"Primer logueo!!"})
@@ -61,12 +63,20 @@ router.post('/restartPassword', async (req, res)=>{
     res.send({status:"success", message:"Contraseña actualizada"})
 })
 
-router.get('/github', passport.authenticate('github', {scope:['user:email']}), async (req,res)=>{})
+router.get('/github', passport.authenticate('github', {scope:['user:email']}), async (req,res)=>{});
 
 router.get('/githubcallback', passport.authenticate('github', {failureRedirect:'/login'}), async (req,res)=>{
     
-    req.session.user = req.user;
-    res.redirect('/')
+    req.session.user = {
+        name: req.user.first_name,
+        mail: req.user.mail,
+        age: req.user.age,
+        role: req.user.role,
+        cart: req.user.cart
+    };
+    console.log(req.session.user);
+    
+    res.redirect('/profile')
 
 })
 

@@ -10,25 +10,21 @@ import passport from 'passport';
 import cartsRouter from './routes/carts.router.js';
 import productsRouter from './routes/products.router.js';
 import __dirname from './utils.js';
-import chatRouter from './routes/chat.router.js';
 import sessionRouter from './routes/session.router.js';
 import viewRouter from './routes/views.router.js';
 import initializePassport from './config/passport.config.js';
-import UserRouter from './routes/users.router.js';
+import { config } from "./config/config.js";
 
-const PORT = process.env.PORT || 8080;
+
+const PORT = config.server.port
 const app = express();
-const DB = 'ecommerce';//nombre de mi base de datos en mongo
-const MONGO = 'mongodb+srv://gabrieltollan:<Gabriel1987>@cluster0.m6bxmyo.mongodb.net/?retryWrites=true&w=majority'+ DB
+console.log("config", config)
+const MONGO_URL = config.mongo.url ;
+mongoose.connect(MONGO_URL);
 
-mongoose.connect(MONGO);
-
-const userRouter = new UserRouter
-
-//const messageManager = new MessageManager();
 app.use(session({
     store: new MongoStore({
-        mongoUrl: MONGO,
+        mongoUrl: MONGO_URL,
         ttl:4000
     }),
     secret: "coderSecret",
@@ -80,7 +76,6 @@ const server = app.listen(PORT, ()=>{
     console.log('Servidor funcionando en el puerto: ' + PORT);
 })
 
-mongoose.connection.close();
 
 
 const io = new Server(server);
@@ -122,4 +117,3 @@ app.use('/', viewRouter);
 app.use('/api/sessions', sessionRouter)
 app.use('/api/cart', cartsRouter);
 app.use('/api/products', productsRouter);
-app.use('/api/chat', chatRouter);
