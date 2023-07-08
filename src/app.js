@@ -6,6 +6,8 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import passport from 'passport';
+import path from "path";
+//import compression from "express-compression";
 
 import cartsRouter from './routes/carts.router.js';
 import productsRouter from './routes/products.router.js';
@@ -14,6 +16,9 @@ import sessionRouter from './routes/session.router.js';
 import viewRouter from './routes/views.router.js';
 import initializePassport from './config/passport.config.js';
 import { config } from "./config/config.js";
+import { transporter } from "./config/gmail.js";
+//import { options } from "./config/options.js";
+import { twilioPhone } from './config/twilio.js';
 
 
 const PORT = config.server.port
@@ -111,6 +116,58 @@ app.get('/', (req,res)=>{
 
 app.get('/current', passport.authenticate('jwt', {session:false}), (req,res)=>{
     res.send(req.user);
+})
+
+const emailTemplate = `<div>
+<h1>Bienvenido!!</h1>
+<img src="https://fs-prod-cdn.nintendo-europe.com/media/images/10_share_images/portals_3/2x1_SuperMarioHub.jpg" style="width:250px"/>
+<p>Ya puedes empezar a usar nuestros servicios</p>
+<img width="100px" src="cid:perrito"/
+<a href="https://www.google.com/">Explorar</a>
+</div>`;
+
+app.post("/registro", async (req,res)=>{
+    try {
+        const contenido = await transporter.sendMail({
+            from:"Ecommerce tienda La Nueva",
+            to:"gabriel.tollan@gmail.com",
+            subject:"Registro exitoso",
+            html: emailTemplate,
+            attachments:[
+                {
+                    filename:"descarga.jpg",
+                    path: path.join(__dirname,"")
+                },
+                {
+                    filename:"factura.pdf",
+                    path: path.join(__dirname,"/images/descarga.pdf"),
+                    cid:"perrito"
+                },
+            ]
+        })
+        console.log("contenido", contenido);
+        res.json({status:"sucess", message: "Registo y envio de correo."})
+    } catch (error) {
+        console.log(error.message);
+        res.json({status:"error", message: "Hubo un error al registrar al usuario."})
+    }   
+})
+
+app.post("/compra", async (req,res)=>{
+    try{
+        const {nombre, producto} = req.query;
+
+        const message = await twilioClient.messages.create({
+            body:`Gracias ${nombre}, su producto ${producto} esta en camino.`,
+            from: twilioPhone,
+            to: "+54 116527 6196"
+        })
+        console.log("Message:", message);
+        res.json({status:"success", message:"compra en camino"})
+    } catch (error) {
+        console.log(error.message);
+        res.json
+    }
 })
 
 app.use('/', viewRouter);

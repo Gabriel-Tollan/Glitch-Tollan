@@ -1,6 +1,8 @@
 import cartModel from '../dao/models/cart.model.js';
 import productModel from '../dao/models/product.model.js';
 import userModel from '../dao/models/User.model.js';
+import cartModel from '../dao/models/cart.model.js';
+//import {v4 as uuidv4 } from "uuid";
 
 export const createCart = async (req, res) => {
 
@@ -201,5 +203,4 @@ export const updateProductQty = async (req, res) => {
             message: error.message
         });
     };
-
 };

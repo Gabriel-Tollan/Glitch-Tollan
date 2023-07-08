@@ -18,4 +18,6 @@ router.put('/:cid', replaceCart);
 
 router.put('/:cid/product/:pid', updateProductQty);
 
+router.post('/:cid/purchase', ticketProducts);
+
 export default router;
