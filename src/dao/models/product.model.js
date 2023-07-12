@@ -1,4 +1,5 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
+import paginate from 'mongoose-paginate-v2';
 
 const productModel = mongoose.model(
     'products',
@@ -17,7 +18,7 @@ const productModel = mongoose.model(
             type: Array,
             default: []
         }
-    })
+    }).plugin(paginate)
 );
 
 export default productModel;

@@ -1,23 +1,38 @@
-const form = document.getElementById("loginForm");
+const form = document.getElementById('login-form');
 
-form.addEventListener('submit', e =>{
-    e.preventDefault();
+form.addEventListener('submit', async (event) => {
 
-    const data = new FormData(form);
+    event.preventDefault();
 
-    const obj = {};
+    const formFata = new FormData(form);
 
-    data.forEach((value,key)=> obj[key]=value)
+    const dataObj = {};
 
-    fetch('/api/session/login',{
+    formFata.forEach((value, key) => dataObj[key] = value);
+
+    await fetch('/api/sessions/login', {
         method: 'POST',
-        body: JSON.stringify(obj),
-        headers:{
+        body: JSON.stringify(dataObj),
+        headers: {
             'Content-Type': 'application/json'
         }
-    }).then(result=>{
-        if(result.status == 200){
-            window.location.replace('/profile')
-        }
     })
-})
+    .then( res => res.json()).then( json => {
+
+        if (json.status === 'Success') {
+
+            window.location.replace('/products');
+
+        } else {
+
+            alert(json.message);
+
+            form[0].value = '';
+
+            form[1].value = '';
+
+        };
+
+    });
+
+});

@@ -1,84 +1,25 @@
 import { Router } from "express";
+import passport from "passport";
 
- 
 const router = Router();
 
-import ProductManager from '../dao/models/cart.model.js';
-import CartManager from '../dao/models/cart.model.js';
+import { renderProducts, renderCart, renderProfile, renderRegister, renderLogin, redirectProducts, renderAddProduct, renderChat } from '../dao/controllers/view.controller.js';
+import { adminAccess, publicAccess, userAccess } from "../middlewares/access.js";
 
-const productManager = new ProductManager();
+router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), redirectProducts);
 
-const cartManager = new CartManager();
+router.get('/login', publicAccess, renderLogin);
 
- const publicAcces = (req, res,next)=>{
-    if(req.session.user) return res.redirect('/products');
-    next();
- }
+router.get('/register', publicAccess, renderRegister);
 
- const privateAcces = (req,res,next)=>{
-    if(!req.session.user) return res.redirect('/login');
-    next();
- }
+router.get('/profile', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), renderProfile);
 
- router.get('/', privateAcces, async (req, res) => {
+router.get('/carts/:cid', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), userAccess, renderCart);
 
-   res.redirect('/products')
+router.get('/products', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), renderProducts);
 
-});
+router.get('/add', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), adminAccess, renderAddProduct);
 
- router.get('/register', publicAcces, (req,res)=>{
-    res.render('register')
- })
+router.get('/chat', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), userAccess, renderChat);
 
- router.get('/login', publicAcces, (req,res)=>{
-    res.render('login')
- })
-
- router.get('/profile', privateAcces, (req,res)=>{
-    res.render('profile',{
-        user: req.session.user
-    })
-
- })
-
- router.get('/carts/:cid', async(req, res) => {
-    
-   const cid = req.params.cid;
-
-   const respuesta = await cartManager.getCart(cid);
-
-   res.render('cart', {
-       status: respuesta.status,
-       payload: respuesta.message
-   });
-   
-});
-
-router.get('/products', privateAcces, async (req, res)=>{
-
-   const {limit = 10, page = 1, category, available, sort} = req.query;
-   
-   const respuesta = await productManager.getProducts(limit, page, category, available, sort);
-
-   res.render('products', {
-       status: respuesta.status,
-       payload: respuesta.message.payload,
-       totalPages: respuesta.message.totalPages,
-       prevPage: respuesta.message.prevPage,
-       nextPage: respuesta.message.nextPage,
-       page: respuesta.message.page,
-       hasNextPage: respuesta.message.hasNextPage,
-       hasPrevPage: respuesta.message.hasPrevPage,
-       prevLink: respuesta.message.prevLink,
-       nextLink: respuesta.message.nextLink,
-       user: req.session.user
-   });
-
-});
-
- router.get('/resetPassword', (req,res)=>{
-      res.render('resetPassword');
-
- })
-
- export default router;
+export default router;

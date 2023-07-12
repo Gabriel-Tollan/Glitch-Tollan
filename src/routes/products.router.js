@@ -2,16 +2,17 @@ import { Router } from 'express';
 
 const router = Router();
 
-import { getProducts, getProductByID, addProduct, updateProduct, deleteProduct } from '../controllers/products.controller.js';
+import { getProducts, getProductByID, addProduct, updateProduct, deleteProduct } from '../dao/controllers/products.controller.js';
+import { validateProduct } from '../middlewares/validations.js';
 
 router.get('/', getProducts);
 
-router.get('/:pid', getProductByID);
+router.get('/:pid', validateProduct, getProductByID);
 
 router.post('/', addProduct);
 
-router.put('/:pid', updateProduct);
+router.put('/:pid', validateProduct, updateProduct);
 
-router.delete('/:pid', deleteProduct);
+router.delete('/:pid', validateProduct, deleteProduct);
 
 export default router;

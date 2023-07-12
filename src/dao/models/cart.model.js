@@ -8,11 +8,7 @@ const cartModel = mongoose.model(
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'users' 
             },
-        status: {
-                type: Boolean,
-                default: true
-            },
-        products:{
+        products: {
             type:[
                 {
                     product:{

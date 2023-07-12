@@ -1,20 +1,17 @@
 import nodemailer from "nodemailer";
-import { options } from "./options.js";
 
-const adminEmail = options.gmail.adminAccount;
-const adminPass = options.gmail.adminPaass;
+import { config } from "./config.js";
 
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
+    service: "gmail",
     host: "smtp.gmail.com",
-    port:587,
-    auth:{
-        usser:adminEmail,
-        pass: adminPass
+    port: 587,
+    auth: {
+        user: config.email.account,
+        pass: config.email.password
     },
-    sercure: false,
-    tls:{
+    secure: false,
+    tls: {
         rejectUnauthorized: false
     }
-})
-
-export { transporter }
+});
