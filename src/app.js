@@ -5,6 +5,7 @@ import passport from 'passport';
 import { Server } from 'socket.io';
 
 
+
 import __dirname from './utils.js';
 import initializePassport from './config/passport.config.js';
 import productRouter from './routes/products.routes.js';
@@ -13,6 +14,9 @@ import sessionRouter from './routes/sessions.routes.js'
 import viewRouter from './routes/views.routes.js';
 import { config } from './config/config.js';
 import { messageDao } from './dao/handler.js';
+import { usersRouter } from "./routes/user.routes.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
+
 
 const PORT = config.server.port;
 
@@ -37,7 +41,8 @@ app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/sessions', sessionRouter);
 app.use('/', viewRouter);
-
+app.use("/api/users", usersRouter);
+app.use(errorHandler);
 
 const server = app.listen(PORT, () => {console.log(`El servidor está corriendo en el puerto ${PORT}`)});
 
