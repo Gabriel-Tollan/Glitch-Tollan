@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import { config } from './config.js';
 
-const CODERKEY = config.secret.coderkey;
+const CODERKEY = config.secret.key;
 
 export const generateToken = (user) => {
 

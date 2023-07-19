@@ -1,4 +1,5 @@
 import { userDao } from '../handler.js';
+import { UserDto } from '../../dto/user.dto.js';
 
 export const register = async (req, res) => {
 
@@ -37,6 +38,7 @@ export const logout = (req, res) => {
 
 export const current = (req, res) => {
 
-    res.send(req.user);
+    const user = new UserDto(req.user.user);
 
+    res.status(202).send({user});
 };

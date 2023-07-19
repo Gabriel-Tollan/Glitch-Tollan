@@ -1,21 +1,27 @@
 <main>
     <div class="main-container">
         <h1>Cart</h1>
-        <div id="cart-id">{{user.cart}}</div>
+        <div id="cart-id">{{payload._id}}</div>
         <h2>Products</h2>
         <div id="products-container">
             {{#each payload.products}}
                 <div class="product-container">
-                    <p class="product-titulo">{{product.titulo}}</p>
-                    <p class="product-data">Precio: ${{product.precio}}</p>
-                    <p class="product-data">Cantidad: {{cantidad}}</p>
-                    <p class="product-data">Categoria: {{product.categoria}}</p>
-                    <p class="product-descripcion">Descripcion: {{product.descripcion}}</p>
+                    <p class="product-title">{{product.title}}</p>
+                    <p class="product-data">Price: ${{product.price}}</p>
+                    <p class="product-data">Quantity: {{quantity}}</p>
+                    <p class="product-data">Category: {{product.category}}</p>
+                    <p class="product-description">Description: {{product.description}}</p>
+                    <button class="remove-from-cart" id={{product._id}}>Remove from Cart</button>
                 </div>
             {{/each}}
         </div>
         <div class="controls">
-            <a href="/products"><button>Seguir Comprando</button></a>
+            <a href="/products"><button>Continue Shopping</button></a>
+            <button id="purchase" {{#unless payload.products}} style="display: none" {{/unless}}>Purchase</button>
         </div>
+        <h2>Ticket</h2>
+        <div id="ticket-code"></div>
+        <div id="ticket-amount"></div>
     </div>
 </main>
+<script src="/js/cart.js"></script>

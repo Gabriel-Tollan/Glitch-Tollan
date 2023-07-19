@@ -1,20 +1,26 @@
-<div>
-    <h1>Registro</h1>
-    <form id="registerForm">
-    <label>Nombre</label>
-    <input name="first_name">
-    <label>Apellido</label>
-    <input name="last_name">
-    <label>Email</label>
-    <input name="email">
-    <label>Edad</label>
-    <input name="age">
-    <label>Contraseña</label>
-    <input type="password"name="password">
-
-    <input type="submit">
- </form>
- <p>¿Ya tienes una cuenta? <a href="/login">Ingrese aquí</a></p>
-
-</div>
+<main>
+    <div class="main-container">
+        <h1>Register</h1>
+        <form class="register-controls" id="register-form">
+            <label>First Name*</label>
+            <input class="input" type="text" name="first_name" value="Gabriel" placeholder="Type your name" required>
+            <label>Last Name*</label>
+            <input class="input" type="text" name="last_name" value="Tollan" placeholder="Type your last name" required>
+            <label>Age</label>
+            <input class="input" type="number" name="age" value="36" placeholder="Enter your age">
+            <label>User Type</label>
+            <select class="input" name="role">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+            <label>Email*</label>
+            <input class="input" type="email" name="email" value="gabriel.tollan@gmail.com" placeholder="Type your email" required>
+            <label>Password*</label>
+            <input class="input" type="password" name="password" value="pass" ="Type a password" required>
+            <input class="button" type="submit" value="Submit">
+        </form>
+        <p>*These fields are required</p>
+        <p>If you are already registered, please click <a href="/login">here</a></p>
+    </div>
+</main>
 <script src="/js/register.js"></script>

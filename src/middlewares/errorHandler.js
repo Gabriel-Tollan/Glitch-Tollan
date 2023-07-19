@@ -16,4 +16,4 @@ export const errorHandler = (error, req,res,next) => {
             break;
     }
     next();
-}
+};

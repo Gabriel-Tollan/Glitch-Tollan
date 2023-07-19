@@ -4,7 +4,7 @@ import passport from "passport";
 const router = Router();
 
 import { renderProducts, renderCart, renderProfile, renderRegister, renderLogin, redirectProducts, renderAddProduct, renderChat } from '../dao/controllers/view.controller.js';
-import { adminAccess, publicAccess, userAccess } from "../middlewares/access.js";
+import { adminAccess, privateAccess, publicAccess, userAccess } from "../middlewares/acces.js";
 
 router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), redirectProducts);
 

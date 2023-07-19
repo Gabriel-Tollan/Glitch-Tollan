@@ -10,7 +10,7 @@ router.post('/register', register);
 
 router.post('/login', validateLogin, login);
 
-router.get('/logout', logout);
+router.get('/logout', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), logout);
 
 router.get('/current', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), current);
 

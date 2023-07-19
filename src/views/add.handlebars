@@ -1,0 +1,29 @@
+<main>
+    <div class="main-container">
+        <h1>Catalog</h1>
+        <div class="controls">
+            <p>You are logged as {{user.first_name}} {{user.last_name}} ({{user.role}})</p>
+            <a href="/profile"><button>Profile</button></a>
+            <a href="/api/sessions/logout"><button >Logout</button></a>
+            <a href="/products"><button>Go Back To Catalog</button></a>
+        </div>
+        <div id="add-products-container">
+            <div class="add-product-container">
+                <form class="add-product-form">
+                    <label>Title</label>
+                    <input type="text" name="title" placeholder="Title" required>
+                    <label>Description</label>
+                    <input type="text" name="description" placeholder="Description" required>
+                    <label>Price</label>
+                    <input type="number" name="price" placeholder="Price" required>
+                    <label>Stock</label>
+                    <input type="number" name="stock" placeholder="Stock" required>
+                    <label>Category</label>
+                    <input type="text" name="category" placeholder="Category" required>
+                    <input type="submit" class="submit-button" id="add-product" value="Add Product">
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="/js/add.js"></script>

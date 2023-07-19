@@ -1,5 +1,5 @@
 import { cartDao } from '../handler.js';
-import { transporter } from '../../config/email.js';
+import { transporter } from '../../config/gmail.js';
 
 export const createCart = async (req, res) => {
     

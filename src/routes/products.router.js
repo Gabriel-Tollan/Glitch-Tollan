@@ -1,18 +1,41 @@
 import { Router } from 'express';
+import passport from "passport";
+import { generateProduct } from "../utils.js";
 
 const router = Router();
 
-import { getProducts, getProductByID, addProduct, updateProduct, deleteProduct } from '../dao/controllers/products.controller.js';
+import { getProducts, getProductByID, addProduct, updateProduct, deleteProduct } from '../dao/controllers/product.controller.js';
 import { validateProduct } from '../middlewares/validations.js';
+import { adminAccess } from '../middlewares/acces.js';
 
-router.get('/', getProducts);
+router.get('/', (req, res) => {
 
-router.get('/:pid', validateProduct, getProductByID);
+    const quantity = parseInt(req.query.quantity) || 100;
 
-router.post('/', addProduct);
+    let products = [];
 
-router.put('/:pid', validateProduct, updateProduct);
+    for (let i = 0; i < quantity; i++){
+        
+        const user = generateProduct();
 
-router.delete('/:pid', validateProduct, deleteProduct);
+        products.push(user);
+
+    };
+
+    res.json({products});
+
+});
+
+
+router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), getProducts);
+
+router.get('/:pid', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), validateProduct, getProductByID);
+
+router.post('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), adminAccess, addProduct);
+
+router.put('/:pid', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), adminAccess, validateProduct, updateProduct);
+
+router.delete('/:pid', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), adminAccess, validateProduct, deleteProduct);
 
 export default router;
+export { router as productRouter };

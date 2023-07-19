@@ -1,0 +1,42 @@
+<main>
+    <div class="main-container">
+        <h1>Catalog</h1>
+        <div class="controls">
+            <p>You are logged as {{user.first_name}} {{user.last_name}} ({{user.role}})</p>
+            <a href="/profile"><button>Profile</button></a>
+            <a href="/api/sessions/logout"><button>Logout</button></a>
+            <a href="/add"><button>Add Product</button></a>
+        </div>
+        <div class="page-controls-container">
+            <div class="controls">
+                {{#if prevLink}}
+                    <a href={{prevLink}}><button id="prev-page">Prev. Page</button></a>
+                {{/if}}
+                {{#if nextLink}}
+                    <a href={{nextLink}}><button d="next-prev">Next. Page</button></a>
+                {{/if}}
+            </div>
+        </div>
+        <div id="add-products-container">
+            {{#each payload}}
+                <div class="add-product-container">
+                    <form class="add-product-form">
+                        <label>Title</label>
+                        <input type="text" name="title" value="{{title}}" required>
+                        <label>Description</label>
+                        <input type="text" name="description" value="{{description}}" required>
+                        <label>Price</label>
+                        <input type="number" name="price" value={{price}} required>
+                        <label>Stock</label>
+                        <input type="number" name="stock" value={{stock}} required>
+                        <label>Category</label>
+                        <input type="text" name="category" value="{{category}}" required>
+                    </form>
+                    <button class="update-product" id={{id}}>Update Product</button>
+                    <button class="delete-product" id={{id}}>Delete Product</button>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+</main>
+<script src="/js/admin.js"></script>

@@ -8,7 +8,7 @@ const ExtractJwt = jwt.ExtractJwt;
 
 import { config } from './config.js';
 
-const CODERKEY = config.secret.coderkey;
+const CODERKEY = config.secret.key;
 
 const initializePassport = () => {
 

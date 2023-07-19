@@ -20,7 +20,7 @@ const PORT = process.env.PORT;
 
 const MONGO = process.env.MONGO;
 
-const CODERSECRET = process.env.CODERSECRETSECRET;
+const CODERSECRET = process.env.CODERSECRET;
 
 const MAIL_ACCOUNT = process.env.MAIL_ACCOUNT;
 
