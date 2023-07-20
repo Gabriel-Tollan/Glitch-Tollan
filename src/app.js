@@ -16,6 +16,8 @@ import { messageDao } from './dao/handler.js';
 import { productRouter } from './routes/products.router.js';
 import { usersRouter } from "./routes/user.router.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
+import { addLogger } from './utils/logger.js';
+
 
 
 const PORT = config.server.port;
@@ -37,7 +39,7 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 
-
+app.use(addLogger)
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/sessions', sessionRouter);

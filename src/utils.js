@@ -3,6 +3,7 @@ import { dirname } from 'path';
 import bcrypt from 'bcrypt';
 import { Faker, en } from "@faker-js/faker";
 
+
 export const customFaker = new Faker({
     locale: [en]
 });
