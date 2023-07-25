@@ -20,7 +20,7 @@ const PORT = process.env.PORT;
 
 const MONGO = process.env.MONGO;
 
-const CODERSECRET = process.env.CODERSECRET;
+const SECRET = process.env.SECRET;
 
 const MAIL_ACCOUNT = process.env.MAIL_ACCOUNT;
 
@@ -29,6 +29,6 @@ const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
 export const config = {
     server: {port: PORT},
     mongo: {url: MONGO},
-    secret: {key: CODERSECRET},
+    secret: {key: SECRET},
     email: {account: MAIL_ACCOUNT, password: MAIL_PASSWORD}
 };

@@ -8,13 +8,13 @@ const ExtractJwt = jwt.ExtractJwt;
 
 import { config } from './config.js';
 
-const CODERKEY = config.secret.key;
+const KEY = config.secret.key;
 
 const initializePassport = () => {
 
     passport.use('jwt', new JwtStrategy({
         jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-        secretOrKey: CODERKEY
+        secretOrKey: KEY
         },
         async (jwt_payload, done) => {
             
