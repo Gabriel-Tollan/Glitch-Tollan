@@ -17,6 +17,10 @@ const productModel = mongoose.model(
         thumbnails: {
             type: Array,
             default: []
+        },
+        owner:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"users"
         }
     }).plugin(paginate)
 );

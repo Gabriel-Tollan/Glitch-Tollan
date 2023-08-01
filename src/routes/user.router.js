@@ -3,9 +3,31 @@ import { CustomError } from "../services/customError.service.js";
 import { EError } from "../enums/EError.js";
 import { generateUserErrorInfo } from "../services/userErrorInfo.js";
 import { generateUserErrorParam } from "../services/userErrorParam.js";
+import userModel from "../dao/models/user.models.js";
+import {checkRole} from "../middlewares/auth.js";
 
 
 const router = Router();
+
+router.put("/premium/:uid", checkRole(["admin"]), async(req,res)=>{
+    try {
+        const userId = req.params.uid;
+        const user = await userModel.findById(userId);
+        const userRol = user.role;
+        if(userRol === "user"){
+            user.role = "premium"
+        } else if(userRol === "premium"){
+            user.role = "user"
+        } else {
+            return res.json({status:"error", message:"no es posible cambiar el role del usuario"});
+        }
+        await userModel.updateOne({_id:user._id},user);
+        res.send({status:"success", message:"rol modificado"});
+    } catch (error) {
+        console.log(error.message);
+        res.json({status:"error", message:"hubo un error al cambiar el rol del usuario"})
+    }
+}) 
 
 const users = [];
 

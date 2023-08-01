@@ -66,3 +66,5 @@ export const addLogger = (req, res, next) =>{
     req.logger.http(`'${req.method}' en '${req.url}' - date: ${date}`);
     next()
 };
+
+export default addLogger
