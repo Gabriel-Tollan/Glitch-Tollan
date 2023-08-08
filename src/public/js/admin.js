@@ -13,7 +13,7 @@ for (let i = 0; i < deleteProduct.length; i++){
 
             await fetch(`/api/products/${deleteProduct[i].id}`, {method: "DELETE"});
 
-            window.location.replace('/products');
+            window.location.replace('/admin');
 
         } catch (error) {
 
@@ -45,7 +45,7 @@ for (let i = 0; i < updateProduct.length; i++){
                 }
             });
 
-            window.location.replace('/products');
+            window.location.replace('/admin');
 
         } catch (error) {
 

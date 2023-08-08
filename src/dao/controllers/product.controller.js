@@ -31,14 +31,14 @@ export const getProductByID = async (req, res) => {
 };
 
 export const addProduct = async (req, res) => {
-    
-    const response = await productDao.addProduct(req.body);
-    
+
+    const response = await productDao.addProduct(req.user.user.email, req.body);
+
     return res.status(response.code).send({
         status: response.status,
         message: response.message
     });
-    
+
 };
 
 export const updateProduct = async (req, res) => {

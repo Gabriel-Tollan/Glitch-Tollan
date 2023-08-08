@@ -1,17 +1,16 @@
 import dotenv from "dotenv";
 import path from "path";
 import { Command } from "commander";
-import  __dirname  from "../utils.js";
 
 const program = new Command();
 
-program
-.option("-mode <mode>", "Environment Mode", "dev")
-program.parse();
+import __dirname from "../utils.js"
+
+program.option("-mode <mode>", "Environment Mode", "prod");
+
+program.parse()
 
 const environment = program.opts();
-
-console.log(environment);
 
 const pathEnvironment = environment.Mode === "prod" ? path.join(__dirname, "../.env.production") : path.join(__dirname, "../.env.development");
 
@@ -20,7 +19,6 @@ dotenv.config({path: pathEnvironment});
 const PORT = process.env.PORT;
 
 const MONGO = process.env.MONGO;
-console.log(process.env)
 
 const SECRET = process.env.SECRET;
 
@@ -28,9 +26,14 @@ const MAIL_ACCOUNT = process.env.MAIL_ACCOUNT;
 
 const MAIL_PASSWORD = process.env.MAIL_PASSWORD;
 
+const MAIL_KEY = process.env.MAIL_KEY;
+
+const ENV = environment.Mode;
+
 export const config = {
     server: {port: PORT},
+    mongo: {url: MONGO},
     secret: {key: SECRET},
-    email: {account: MAIL_ACCOUNT, password: MAIL_PASSWORD},
-    mongo: {url: MONGO}
+    email: {account: MAIL_ACCOUNT, password: MAIL_PASSWORD, key: MAIL_KEY},
+    environment: {mode: ENV}
 };

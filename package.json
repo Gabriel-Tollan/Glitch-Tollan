@@ -50,6 +50,10 @@
     "url": "https://github.com/Gabriel-Tollan/Glitch-Tollan/issues"
   },
   "homepage": "https://github.com/Gabriel-Tollan/Glitch-Tollan#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
+  },
   "description": ""
 }

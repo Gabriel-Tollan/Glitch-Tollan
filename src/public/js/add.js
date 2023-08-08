@@ -18,11 +18,15 @@ form[0].addEventListener('submit', async (event) => {
             headers: {
                 'Content-Type': 'application/json'
             }
+        }).then(res => res.json()).then(json => {
+
+            alert(json.message);
+
         });
 
     } catch (error) {
 
-        console.log(error.message);
+        alert(error.message);
 
     };
 

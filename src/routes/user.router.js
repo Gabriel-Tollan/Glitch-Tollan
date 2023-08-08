@@ -1,79 +1,53 @@
 import { Router } from "express";
-import { CustomError } from "../services/customError.service.js";
-import { EError } from "../enums/EError.js";
-import { generateUserErrorInfo } from "../services/userErrorInfo.js";
-import { generateUserErrorParam } from "../services/userErrorParam.js";
 import userModel from "../dao/models/user.models.js";
-import {checkRole} from "../middlewares/auth.js";
+import { validateRole } from "../middlewares/validation.js";
 
 
 const router = Router();
 
-router.put("/premium/:uid", checkRole(["admin"]), async(req,res)=>{
+router.put('/premium/:uid', validateRole(['admin']), async (req, res) => {
+
     try {
-        const userId = req.params.uid;
-        const user = await userModel.findById(userId);
-        const userRol = user.role;
-        if(userRol === "user"){
-            user.role = "premium"
-        } else if(userRol === "premium"){
-            user.role = "user"
+
+        const uid = req.params.uid;
+
+        const user = await userModel.findById(uid);
+
+        const userRole = user.role;
+
+        if (userRole === 'user') {
+
+            user.role = 'premium';
+
+        } else if (userRole === 'premium') {
+
+            user.role = 'user';
+
         } else {
-            return res.json({status:"error", message:"no es posible cambiar el role del usuario"});
-        }
-        await userModel.updateOne({_id:user._id},user);
-        res.send({status:"success", message:"rol modificado"});
-    } catch (error) {
-        console.log(error.message);
-        res.json({status:"error", message:"hubo un error al cambiar el rol del usuario"})
-    }
-}) 
 
-const users = [];
+            return res.status(400).send({
+                status: 'Error',
+                message: 'Not authorized to make that change'
+            });
 
-router.get("/", (req,res)=>{
-    res.json({status:"succes",data:users})
-})
+        };
 
-router.post("/", (req,res)=>{
-    const {first_name, last_name, email} = req.body;
-    if(!first_name || !last_name || !email){
-        CustomError.createError({
-            name: "User create error",
-            cause: generateUserErrorInfo(req.body),
-            message: "Error creando el Usuario",
-            errorCode: EError.INVALID_JSON
+        await userModel.updateOne({_id: uid}, user);
+
+        return res.status(200).send({
+            status: 'Success',
+            message: 'User status successfuly updated'
         });
+
+    } catch (error) {
+
+        return res.status(400).send({
+            status: 'Error',
+            message: error.message
+        });
+
     };
-    const newUser = {
-        id: users.length +1,
-        first_name,
-        last_name,
-        email
-    }
-    users.push(newUser);
-       
-    res.json({status:"succes",data:users})
-})
 
-router.get("/:uid", (req,res)=>{
-   const {uid} = req.params;
-   const userID = parseInt(uid);
-   if(Number.isNaN(userID)){
-    CustomError.createError({
-        name: "User get by id error",
-        cause:generateUserErrorParam(uid),
-        message:"Error obteniendo el usuario por el id",
-        errorCode: EError.INVALID_PARAM
-    })
-   }
-   const user = users.find(u=>u.id === userID);
-   if(user){
-        res.json({status:"succes",data:user})
-    }else{
-        res.json({status:"error",message:"Usuario no encontrado"})
-    }
-})
+});
 
-
-export {router as usersRouter}
+export default router;

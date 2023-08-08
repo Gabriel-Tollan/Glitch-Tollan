@@ -1,5 +1,6 @@
 import {ProuctModel} from "../dao/models/product.model.js";
 import {connectDB} from "../config/dbConnection.js";
+import customLogger from "../utils/logger.js";
 
 connectDB();
 
@@ -12,8 +13,9 @@ const updateProducts = async() =>{
         console.log("Result", result)
 
     } catch (error) {
-        console.log(error.message)
-    }
+        customLogger.error(`Date: ${new Date().toLocaleDateString()} - File: mongo.script.js - Message: ${error.message}`);
+
+    };
 
 }
 updateProducts();

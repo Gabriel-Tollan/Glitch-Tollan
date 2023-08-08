@@ -1,5 +1,9 @@
 import mongoose from "mongoose";
 import { config } from "./config.js";
+import customLogger from "../utils/logger.js";
+import { loggerPrefix } from "../utils/logger.js";
+
+const filename = 'dbConnection.js';
 
 export const connectDB = async () => {
 
@@ -7,11 +11,11 @@ export const connectDB = async () => {
 
         await mongoose.connect(config.mongo.url);
         
-        console.log("MongoDB Connected");
+        customLogger.info(loggerPrefix(filename, `Connected to MongoDB`));
 
     } catch (error) {
 
-        console.log(error.message);
+        customLogger.error(loggerPrefix(filename, `${error.message}`));
 
     };
 

@@ -19,8 +19,8 @@ const productModel = mongoose.model(
             default: []
         },
         owner:{
-            type:mongoose.Schema.Types.ObjectId,
-            ref:"users"
+            type: String,
+            default: 'admin@mail.com'
         }
     }).plugin(paginate)
 );

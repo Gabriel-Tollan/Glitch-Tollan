@@ -1,7 +1,13 @@
 import userModel from "../models/user.models.js";
 import { cartDao } from '../handler.js';
 import { createHash } from '../../utils.js';
-import { generateToken } from "../../config/token.js";
+import { generateToken, generateEmailToken } from "../../utils/token.js";
+import { UserDto } from "../../dto/user.dto.js";
+import customLogger from '../../utils/logger.js';
+import { loggerPrefix } from "../../utils/logger.js";
+import { sendRecoveryPassword } from "../../utils/email.js";
+
+const filename = 'user.mongo.js';
 
 export class UserMongo{
 
@@ -17,6 +23,8 @@ export class UserMongo{
     
         if (inUse){
 
+            customLogger.error(loggerPrefix(filename, 'The email is already in use'));
+
             return {
                 code: 400,
                 status: "Error",
@@ -30,6 +38,8 @@ export class UserMongo{
         try {
     
             await this.model.create(user);
+
+            customLogger.http(loggerPrefix(filename, 'User registered correctly'));
     
             return {
                 code: 202,
@@ -38,6 +48,8 @@ export class UserMongo{
             };
     
         } catch (error) {
+
+            customLogger.error(loggerPrefix(filename, `${error.message}`));
     
             return{
                 code: 400,
@@ -58,15 +70,81 @@ export class UserMongo{
         
         user.cart = response.message._id;
 
-        const access_token = generateToken(user);
+        const userDto = new UserDto(user);
+
+        const access_token = generateToken(user, '1d');
+
+        customLogger.http(loggerPrefix(filename, `User ${user._id} successfully logged in`));
     
         return{
             status: "Success",
             message: "You have succesfully logged in",
-            user: user,
+            user: userDto,
             token: access_token,
         };
     
+    };
+
+    async forgotPassword(email){
+
+        try {
+
+            const resetToken = generateEmailToken(email, 180);
+
+            await sendRecoveryPassword(email, resetToken);
+
+            return{
+                code: 202,
+                status: "Success",
+                message: "Password recovery email sent"
+            };
+
+
+        } catch (error) {
+
+            customLogger.error(`Date: ${new Date().toLocaleDateString()} - File: ${filename} - Message: ${error.message}`);
+
+            return{
+                code: 400,
+                status: "Error",
+                message: error.message
+            };
+
+        };
+
+    };
+
+    async resetPassword(email, newPassword){
+
+        try {
+
+            const user = await this.model.findOne({email: email});
+
+            const newUserData = {
+                ...user._doc,
+                password: createHash(newPassword)
+            };
+
+            await this.model.findOneAndUpdate({email: email}, newUserData);
+
+            return{
+                code: 202,
+                status: "Success",
+                message: "Password successfuly reset"
+            };
+
+        } catch (error) {
+
+            customLogger.error(`Date: ${new Date().toLocaleDateString()} - File: ${filename} - Message: ${error.message}`);
+
+            return{
+                code: 400,
+                status: "Error",
+                message: error.message
+            };
+
+        };
+
     };
 
 };

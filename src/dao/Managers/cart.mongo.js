@@ -6,6 +6,8 @@ import cartModel from '../models/cart.model.js';
 import productModel from '../models/product.model.js';
 import userModel from '../models/user.models.js';
 import ticketModel from "../models/ticket.model.js";
+import customLogger from "../../utils/logger.js";
+
 
 export class CartMongo{
 
@@ -39,6 +41,8 @@ export class CartMongo{
             };
     
         } catch (error) {
+
+            customLogger.error(`${new Date().toLocaleDateString()}: ${error.message}`);
     
             return {
                 code: 400,
@@ -80,6 +84,8 @@ export class CartMongo{
 
         } catch (error) {
 
+            customLogger.error(`${new Date().toLocaleDateString()}: ${error.message}`);
+
             return{
                 code: 400,
                 status: 'Error',
@@ -112,6 +118,8 @@ export class CartMongo{
 
         } catch (error) {
 
+            customLogger.error(`${new Date().toLocaleDateString()}: ${error.message}`);
+
             return {
                 code: 400,
                 status: 'Error',
@@ -135,6 +143,8 @@ export class CartMongo{
             };
 
         } catch (error) {
+
+            customLogger.error(`${new Date().toLocaleDateString()}: ${error.message}`);
 
             return {
                 code: 400,
@@ -160,6 +170,8 @@ export class CartMongo{
 
         } catch (error) {
 
+            customLogger.error(`${new Date().toLocaleDateString()}: ${error.message}`);
+
             return {
                 code: 400,
                 status: "Error",
@@ -183,6 +195,8 @@ export class CartMongo{
             };
 
         } catch (error) {
+
+            customLogger.error(`${new Date().toLocaleDateString()}: ${error.message}`);
 
             return {
                 code: 400,
@@ -213,6 +227,8 @@ export class CartMongo{
             };
 
         } catch (error) {
+
+            customLogger.error(`${new Date().toLocaleDateString()}: ${error.message}`);
 
             return {
                 code: 400,
@@ -295,6 +311,8 @@ export class CartMongo{
             };
 
         } catch (error) {
+
+            customLogger.error(`${new Date().toLocaleDateString()}: ${error.message}`);
 
             return{
                 code: 400,

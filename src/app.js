@@ -15,14 +15,17 @@ import { config } from './config/config.js';
 import { messageDao } from './dao/handler.js';
 import  productRouter  from './routes/products.router.js';
 import  { usersRouter }  from "./routes/user.router.js";
-import  errorHandler  from "./middlewares/errorHandler.js";
-import  addLogger  from './utils/logger.js';
-
-
+import customLogger from './utils/logger.js';
+import { loggerPrefix } from './utils/logger.js'
+import loggerRouter from './routes/logger.routes.js';
 
 const PORT = config.server.port;
 
 const app = express();
+
+const filename = 'app.js'
+
+customLogger.info(loggerPrefix(filename,`Application running in ${config.environment.mode} mode`));
 
 
 app.use(cookieParser());
@@ -39,22 +42,26 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 
-app.use(addLogger)
+
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
 app.use('/api/sessions', sessionRouter);
 app.use('/', viewRouter);
 app.use("/api/users", usersRouter);
-app.use(errorHandler);
-app.use('/mockingproducts', productRouter);
+app.use('/loggerTest', loggerRouter);
 
-const server = app.listen(PORT, () => {console.log(`El servidor está corriendo en el puerto ${PORT}`)});
+
+const server = app.listen(PORT, () => {
+
+    customLogger.info(loggerPrefix(filename,`Servidor escuchando en el puerto ${PORT}`));
+
+});
 
 const io = new Server(server);
 
 io.on('connection', (socket) => {
 
-    console.log(`Socket Connected`);
+    customLogger.info(loggerPrefix(filename, `Socket Connected`));
 
     socket.on('newMessage', async (entry) => {
 

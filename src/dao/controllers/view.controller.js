@@ -83,3 +83,15 @@ export const redirectProducts = async (req, res) => {
     res.redirect('/products');
 
 };
+
+export const renderForgot = async (req, res) => {
+
+    res.render('forgot');
+
+};
+
+export const renderReset = async (req, res) => {
+
+    res.render('reset');
+
+};

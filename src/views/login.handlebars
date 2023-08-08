@@ -1,15 +1,13 @@
-<div>
-    <h1>Login</h1>
-    <form id="loginForm">
-        <label>Email</label>
-        <input name="email">
-        <br>
-        <label>Contraseña</label>
-        <input name="password" type="password">
-        <input type="submit">
+<main>
+    <div class="main-container">
+        <h1>Login</h1>
+        <form class="controls" id="login-form">
+            <input class="input" type="email" name="email" placeholder="Type an email">
+            <input class="input" type="password" name="password" placeholder="Type a password">
+            <input class="button" type="submit" value="Login">
     </form>
     <p>No estas registrado? <a href="/register">Registrate aqui</a></p>
     <p>No estas registrado? <a href="/api/sessions/github">Registrate con github</a></p>
-
-</div>
+   </div>
+</main> 
 <script src="/js/login.js"></script>

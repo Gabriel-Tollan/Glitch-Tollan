@@ -42,3 +42,29 @@ export const current = (req, res) => {
 
     res.status(202).send({user});
 };
+
+export const forgotPassword = async (req, res) => {
+
+    const { email } = req.body;
+
+    const response = await userDao.forgotPassword(email);
+
+    return res.status(response.code).send({
+        status: response.status,
+        message: response.message
+    });
+
+};
+
+export const resetPassword = async (req, res) => {
+
+    const { email, password } = req.body;
+
+    const response = await userDao.resetPassword(email, password);
+
+    return res.status(response.code).send({
+        status: response.status,
+        message: response.message
+    });
+
+};

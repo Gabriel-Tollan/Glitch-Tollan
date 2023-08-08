@@ -1,3 +1,5 @@
+import customLogger from "../utils/logger.js";
+
 export const publicAccess = (req, res, next) => {
     
     if (req.user) return res.redirect('/products');
@@ -8,7 +10,11 @@ export const publicAccess = (req, res, next) => {
 
 export const privateAccess = (req, res, next) => {
     
-    if (!req.user) return res.redirect('/login');
+    if (!req.user) {
+        customLogger.warn(`${new Date().toLocaleDateString()}: Unauthorized access. Redirecting to the login page`);
+    return res.redirect('/login');
+
+    };
 
     next();
 
@@ -16,11 +22,15 @@ export const privateAccess = (req, res, next) => {
 
 export const adminAccess = (req, res, next) => {
     
-    if (req.user.user.role !== 'admin') return res.redirect('/products');
-
-    next();
-
+    if (req.user.user.role !== 'admin') 
+    
+    customLogger.warn(`${new Date().toLocaleDateString()}: Unauthorized access. Only admins can access this page`);
+    
+    return res.redirect('/products');
+    
 };
+
+next();
 
 export const userAccess = (req, res, next) => {
     
