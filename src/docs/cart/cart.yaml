@@ -1,0 +1,227 @@
+paths:
+  /api/carts/:
+    get:
+      summary: Obtener todos los carritos
+      tags:
+        - Carritos
+      responses:
+        "200":
+          description: El carrito se octuvo satisfactoriamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Carts'
+        "400":
+          description: Error al obtener los carritos
+        "500":
+          description: Error interno del servidor
+    post:
+      summary: Agregar un carrito
+      tags:
+        - Carritos
+      responses:
+        "200":
+          description: El carrito se creo satisfactoriamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Carts'
+        "400":
+          description: Error al crear el carrito
+        "500":
+          description: Error interno del servidor
+  /api/carts/{cid}:
+    get:
+      summary: Obtener un carrito en particular a traves de su _id
+      tags:
+        - Carritos
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: cid es el _id del carrito que quiere obtener
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: El carrito fue obtenido satisfactoriamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Carts'
+        "400":
+          description: Error al obtener el carrito
+        "500":
+          description: Error interno del servidor
+    delete:
+      summary: Elimina un carrito por el _id
+      tags:
+        - Carritos
+      parameters:
+      - name: cid
+        in: path
+        required: true
+        description: cid es el _id del producto que quiere eliminar
+        schema:
+          $type: string
+      responses:
+        "200":
+          description: El carrito fue obtenido satisfactoriamente
+        "400":
+          description: Error al obtener el carrito
+        "500":
+          description: Error interno del servidor    
+  /api/carts/{cid}/purchase:
+    get:
+      summary: Crea la orden del carrito solo con los productos disponibles
+      tags:
+        - Carritos
+      responses:
+        "200":
+          description: La orden se creo satisfactoriamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/Carts'
+        "400":
+          description: Error al crear la orden
+        "500":
+          description: Error interno del servidor      
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Obtener un carrito en particular y agregar un producto a traves de sus _id
+      tags:
+        - Carritos
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: cid es el _id del carrito en el que quiere agregar productos
+          schema:
+            $type: string
+        - name: pid
+          in: path
+          required: true
+          description: pid es el _id del producto que quiere agregar al carrito
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Se agrego el producto satisfactoriamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Carts'
+        "400":
+          description: Error al obtener el carrito
+        "500":
+          description: Error interno del servidor
+    put:
+      summary: Obtener un carrito en particular y actualizar un producto, segun la cantidad que desee, a traves de sus _id
+      tags:
+        - Carritos      
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: cid es el _id del carrito en el que quiere agregar productos
+          schema:
+            $type: string
+        - name: pid
+          in: path
+          required: true
+          description: pid es el _id del producto que quiere agregar al carrito
+          schema:
+            $type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/updateProductQuantity'
+      responses:
+        "200":
+          description: Se actualizao la cantidad del producto satisfactoriamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Carts'
+        "400":
+          description: Error al obtener el carrito
+        "500":
+          description: Error interno del servidor
+    delete:
+      summary: Obtener un carrito en particular y se elimina un producto a traves de sus _id
+      tags:
+        - Carritos
+      parameters:
+        - name: cid
+          in: path
+          required: true
+          description: cid es el _id del carrito en el que quiere agregar productos
+          schema:
+            $type: string
+        - name: pid
+          in: path
+          required: true
+          description: pid es el _id del producto que quiere agregar al carrito
+          schema:
+            $type: string
+      responses:
+        "200":
+          description: Se elimino el producto satisfactoriamente
+          content:
+            application/json:
+              schema:
+                $ref: '#components/schemas/Carts'
+        "400":
+          description: Error al obtener el carrito
+        "500":
+          description: Error interno del servidor
+
+
+
+components:
+  schemas:
+    Carts:
+      type: Object
+      properties:
+        _id:
+          type: ObjectId
+          description: id generado por la base de datos
+        products:
+          type: Object
+          properties:
+            _id:
+              type: ObjectId
+              description: id generado por la base de datos
+            productId:
+              type: ObjectId
+              description: id correspondiente a un producto
+            quantity:
+              type: Number
+              description: Cantidad de productos
+      example:
+        _id: ObjectId("64c53ffa8745156657c4e07e")
+        products:
+          - _id: ObjectId("64cd664cee520c4b8bc1f854")
+            productId: ObjectId("64c53ffa8745156657c4e07e")
+            quantity: 2
+          - _id: ObjectId("64cd665fee520c4b8bc1f859")
+            productId: ObjectId("64c53ffa8745156657c4e07e")
+            quantity: 1
+  requestBodies:
+    updateProductQuantity:
+      type: Object
+      properties:
+        quantity:
+          type: Number
+          description: Cantidad de productos que desea agregar
+      example:
+        quantity: 3

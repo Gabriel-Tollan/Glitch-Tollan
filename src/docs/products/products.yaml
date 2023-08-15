@@ -1,0 +1,193 @@
+paths:
+ /api/products/:
+  get:
+   summary: Obtener todos los productos
+   tags:
+    - Productos
+   responses:
+    "200":
+     description: Los productos fueron obtenidos satisfactoriamente
+     content:
+      application/json:
+       schema:
+        type: array
+        items:
+         $ref: '#components/schemas/Products'
+    "400":
+     description: Error al obtener los productos
+    "500":
+     description: Error interno del servidor
+  post:
+   summary: Agregar un producto
+   tags:
+    - Productos
+   requestBody:
+    required: true
+    content:
+     application/json:
+      schema:
+       $ref: '#components/requestBodies/addProduct'
+   responses:
+    "200":
+     description: El producto fue creado satisfactoriamente
+     content:
+      application/json:
+       schema:
+        type: array
+        items:
+         $ref: '#components/schemas/Products'
+    "400":
+     description: Error al crear el productos
+    "500":
+     description: Error interno del servidor
+ /api/products/{pid}:
+  get:
+   summary: Obtener un producto en particular a traves de su _id
+   tags:
+    - Productos
+   parameters:
+    - name: pid
+      in: path
+      required: true
+      description: pid es el _id del producto que quiere obtener
+      schema:
+       $type: string
+   responses:
+    "200":
+     description: El productos fue obtenido satisfactoriamente
+     content:
+      application/json:
+       schema:
+         $ref: '#components/schemas/Products'
+    "400":
+     description: Error al obtener el producto
+    "500":
+     description: Error interno del servidor
+  put:
+   summary: Actualizar un producto por el _id
+   tags:
+    - Productos
+   parameters:
+    - name: pid
+      in: path
+      required: true
+      description: pid es el _id del producto que quiere editar
+      schema:
+       $type: string
+   requestBody:
+    required: true
+    content:
+     application/json:
+      schema:
+       $ref: '#components/requestBodies/addProduct'
+   responses:
+    "200":
+     description: El producto fue editado satisfactoriamente
+     content:
+      application/json:
+       schema:
+        type: array
+        items:
+         $ref: '#components/schemas/Products'
+    "400":
+     description: Error al crear el productos
+    "500":
+     description: Error interno del servidor
+  delete:
+   summary: Elimina un producto por el _id
+   tags:
+    - Productos
+   parameters:
+    - name: pid
+      in: path
+      required: true
+      description: pid es el _id del producto que quiere eliminar
+      schema:
+       $type: string
+   responses:
+    "200":
+     description: El producto fue eliminado satisfactoriamente
+    "400":
+     description: Error al crear el productos
+    "500":
+     description: Error interno del servidor
+
+components:
+ schemas:
+  Products:
+   type: Object
+   properties:
+    _id:
+     type: ObjectId
+     description: id generado por la base de datos
+    title:
+     type: String
+     description: Nombre del producto
+    description:
+     type: String
+     description: Breve descripcion del producto
+    price: 
+     type: Number
+     description: Precio del producto
+    thumbnail:
+     type: String
+     description: Link de imagen del producto
+    status:
+     type: Boolean
+     description: Indica con "true" o "false" si el producto esta disponible o no
+    code:
+     type: String
+     description: Codigo unico que identifica el producto
+    stock:
+     type: Number
+     description: Stock disponible del producto
+    category:
+     type: String
+     description: Categoria a la que corresponde el producto
+    owner:
+     type: ObjectId
+     description: id del usuario que creo el producto
+   example:
+    _id: ObjectId("64c53ffa8745156657c4e07e")
+    title: Sleek Plastic Computer
+    description: The beautiful range of Apple Naturalé that has an exciting mix of natural ingredients. With the Goodness of 100% Natural Ingredients
+    price: 1804
+    thumbnail: https://loremflickr.com/640/480/food?lock=8016084552646656
+    status: true
+    code: 4310ca94-1392-449c-9674-45afb42366c2
+    stock: 45
+    category: Jewelery
+    owner: ObjectId("64a1298cb19875eef3f115fc")
+ requestBodies:
+  addProduct:
+   type: Object
+   properties:
+    title:
+     type: String
+     description: Nombre del producto
+    description:
+     type: String
+     description: Breve descripcion del producto
+    price:
+     type: Number
+     description: Precio del producto
+    thumbnail:
+     type: String
+     description: Link de imagen del producto
+    code:
+     type: String
+     description: Codigo unico que identifica el producto
+    stock:
+     type: Number
+     description: Stock disponible del producto
+    category:
+     type: String
+     description: Categoria a la que corresponde el producto
+   example:
+    title: Mondongo
+    description: Guisado de mondongo con garbanzo
+    price: 1500
+    thumbnail: 'http:/image'
+    code: ensdf24234
+    stock: 20
+    category: Principal

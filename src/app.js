@@ -3,6 +3,7 @@ import cookieParser from 'cookie-parser';
 import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
 import passport from 'passport';
+import swaggerUi from 'swagger-ui-express';
 
 
 
@@ -18,6 +19,9 @@ import  { usersRouter }  from "./routes/user.router.js";
 import customLogger from './utils/logger.js';
 import { loggerPrefix } from './utils/logger.js'
 import loggerRouter from './routes/logger.routes.js';
+import { swaggerSpecs } from './config/doc.config.js';
+import { connectDB } from './config/dbConnection.js';
+
 
 const PORT = config.server.port;
 
@@ -49,6 +53,8 @@ app.use('/api/sessions', sessionRouter);
 app.use('/', viewRouter);
 app.use("/api/users", usersRouter);
 app.use('/loggerTest', loggerRouter);
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
+
 
 
 const server = app.listen(PORT, () => {
@@ -80,3 +86,5 @@ io.on('connection', (socket) => {
     });
     
 });
+
+connectDB();
