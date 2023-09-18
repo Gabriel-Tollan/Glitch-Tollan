@@ -1,6 +1,6 @@
 import { Router } from "express";
 import userModel from "../dao/models/user.models.js";
-import { validateRole } from "../middlewares/validation.js";
+import { validateRole } from "../../src/middlewares/validations.js";
 
 
 const router = Router();

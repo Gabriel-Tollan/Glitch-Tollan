@@ -4,8 +4,8 @@ import passport from "passport";
 const router = Router();
 
 import { renderProducts, renderCart, renderProfile, renderRegister, renderLogin, redirectProducts, renderAddProduct, renderChat, renderAdmin, renderForgot, renderReset } from '../dao/controllers/view.controller.js';
-import { publicAccess } from "../middlewares/access.js";
-import { validateRole, validateResetToken } from "../middlewares/validations.js";
+import { publicAccess } from "../../src/middlewares/acces.js";
+import { validateRole, validateResetToken } from "../../src/middlewares/validations.js";
 
 router.get('/', passport.authenticate('jwt', {session: false, failureRedirect: '/login'}), redirectProducts);
 

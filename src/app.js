@@ -4,7 +4,7 @@ import handlebars from 'express-handlebars';
 import { Server } from 'socket.io';
 import passport from 'passport';
 import swaggerUi from 'swagger-ui-express';
-
+import cors from "cors";
 
 
 import __dirname from './utils.js';
@@ -15,13 +15,13 @@ import viewRouter from './routes/views.router.js';
 import { config } from './config/config.js';
 import { messageDao } from './dao/handler.js';
 import  productRouter  from './routes/products.router.js';
-import  { usersRouter }  from "./routes/user.router.js";
+import  usersRouter   from './routes/user.router.js';
 import customLogger from './utils/logger.js';
 import { loggerPrefix } from './utils/logger.js'
 import loggerRouter from './routes/logger.routes.js';
 import { swaggerSpecs } from './config/doc.config.js';
 import { connectDB } from './config/dbConnection.js';
-
+import { paymentRouter } from "./routes/payment.routes.js"
 
 const PORT = config.server.port;
 
@@ -33,7 +33,7 @@ customLogger.info(loggerPrefix(filename,`Application running in ${config.environ
 
 
 app.use(cookieParser());
-
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(__dirname + '/public'));
@@ -54,7 +54,7 @@ app.use('/', viewRouter);
 app.use("/api/users", usersRouter);
 app.use('/loggerTest', loggerRouter);
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
-
+app.use("/api/payments", paymentRouter);
 
 
 const server = app.listen(PORT, () => {

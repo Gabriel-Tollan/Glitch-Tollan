@@ -22,15 +22,18 @@ export const privateAccess = (req, res, next) => {
 
 export const adminAccess = (req, res, next) => {
     
-    if (req.user.user.role !== 'admin') 
+    if (req.user.user.role !== 'admin') {
     
     customLogger.warn(`${new Date().toLocaleDateString()}: Unauthorized access. Only admins can access this page`);
     
     return res.redirect('/products');
     
-};
+    };
 
-next();
+    next();
+
+};    
+
 
 export const userAccess = (req, res, next) => {
     

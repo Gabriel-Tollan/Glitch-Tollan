@@ -4,37 +4,52 @@ export const renderProducts = async (req, res) => {
 
     const {limit = 10, page = 1, category, available, sort} = req.query;
 
-    const response = await viewDao.renderProducts(limit, page, category, available, sort);
+    const user = req.user.user;
 
-    if (req.user.user.role === 'admin'){
+    const response = await viewDao.renderProducts(limit, page, category, available, sort, user);
 
-        return res.render('admin', {
-            payload: response.payload,
-            totalPages: response.totalPages,
-            prevPage: response.prevPage,
-            nextPage: response.nextPage,
-            page: response.page,
-            hasNextPage: response.hasNextPage,
-            hasPrevPage: response.hasPrevPage,
-            prevLink: response.prevLink,
-            nextLink: response.nextLink,
-            user: req.user.user
-        });
-
+    const renderObject = {
+        payload: response.payload,
+        totalPages: response.totalPages,
+        prevPage: response.prevPage,
+        nextPage: response.nextPage,
+        page: response.page,
+        hasNextPage: response.hasNextPage,
+        hasPrevPage: response.hasPrevPage,
+        prevLink: response.prevLink,
+        nextLink: response.nextLink,
+        user: user,
+        isAdmin: user.role === 'admin' ? true : false,
+        isPremium: user.role === 'premium' ? true : false,
+        isUser: user.role === 'user' ? true : false,
     };
 
-    return res.render('products', {
+    res.render('products', renderObject);
+
+};
+
+export const renderAdmin = async (req, res) => {
+
+    const {limit = 10, page = 1, category, available, sort} = req.query;
+
+    const user = req.user.user;
+
+    const response = await viewDao.renderProducts(limit, page, category, available, sort, user, true);
+
+    const renderObject = {
         payload: response.payload,
-            totalPages: response.totalPages,
-            prevPage: response.prevPage,
-            nextPage: response.nextPage,
-            page: response.page,
-            hasNextPage: response.hasNextPage,
-            hasPrevPage: response.hasPrevPage,
-            prevLink: response.prevLink,
-            nextLink: response.nextLink,
-            user: req.user.user
-    });
+        totalPages: response.totalPages,
+        prevPage: response.prevPage,
+        nextPage: response.nextPage,
+        page: response.page,
+        hasNextPage: response.hasNextPage,
+        hasPrevPage: response.hasPrevPage,
+        prevLink: response.prevLink,
+        nextLink: response.nextLink,
+        user: user,
+    };
+
+    res.render('admin', renderObject);
 
 };
 
